@@ -17,9 +17,12 @@ class AnswerButton extends StatelessWidget {
         // shape: BeveledRectangleBorder(
         //   borderRadius: BorderRadius.circular(10),
         // ),
-        padding: EdgeInsets.symmetric(vertical: 10, horizontal: 40),
+        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 40),
       ),
-      child: Text(answerText),
+      child: Text(
+        answerText,
+        textAlign: TextAlign.center,
+      ),
     );
   }
 }

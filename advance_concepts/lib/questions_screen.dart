@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import "package:advance_concepts/answer_button.dart";
 import "package:advance_concepts/data/questions.dart";
+import "package:google_fonts/google_fonts.dart";
 
 class QuestionScreen extends StatefulWidget {
-  const QuestionScreen({super.key});
+  const QuestionScreen({super.key, required this.onSelectedAnswer});
+  final void Function(String answer) onSelectedAnswer;
   @override
   State<QuestionScreen> createState() {
     return _QuestionScreenState();
@@ -11,26 +13,48 @@ class QuestionScreen extends StatefulWidget {
 }
 
 class _QuestionScreenState extends State<QuestionScreen> {
+  var index = 0;
+  void indexIncreaser(String selectedAnswer) {
+    widget.onSelectedAnswer(selectedAnswer);
+    if (questions.length - 1 != index) {
+      setState(() {
+        index++;
+      });
+    }
+  }
+
   @override
   Widget build(content) {
-    final currentQuestion = questions[0];
+    final currentQuestion = questions[index];
 
-    return SizedBox(
-      width: double.infinity,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text(
-            currentQuestion.question,
-            style: const TextStyle(color: Colors.white),
-          ),
-          const SizedBox(height: 30),
-          ...currentQuestion.options.map(
-            (option) {
-              return AnswerButton(onTap: () {}, answerText: option);
-            },
-          )
-        ],
+    return Container(
+      margin: const EdgeInsets.all(20),
+      child: SizedBox(
+        width: double.infinity,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Text(
+              currentQuestion.question,
+              style: GoogleFonts.lato(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 24),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 30),
+            ...currentQuestion.getShuffledOptions().map(
+              (option) {
+                return AnswerButton(
+                    onTap: () {
+                      indexIncreaser(option);
+                    },
+                    answerText: option);
+              },
+            )
+          ],
+        ),
       ),
     );
   }
