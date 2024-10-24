@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import "package:advance_concepts/answer_button.dart";
-import "package:advance_concepts/data/questions.dart";
-import "package:google_fonts/google_fonts.dart";
+import "package:advance_concepts_1/answer_button.dart";
+import "package:advance_concepts_1/data/questions.dart";
+// import "package:advance_concepts_1/google_fonts.dart";
 
 class QuestionScreen extends StatefulWidget {
   const QuestionScreen({super.key, required this.onSelectedAnswer});
@@ -37,10 +37,10 @@ class _QuestionScreenState extends State<QuestionScreen> {
           children: [
             Text(
               currentQuestion.question,
-              style: GoogleFonts.lato(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 24),
+              // style: GoogleFonts.lato(
+              //     color: Colors.white,
+              //     fontWeight: FontWeight.bold,
+              //     fontSize: 24),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 30),
