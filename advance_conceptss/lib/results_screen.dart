@@ -41,8 +41,13 @@ class ResultsScreen extends StatelessWidget {
             const SizedBox(height: 30),
             QuestionsSummary(getSummaryData()),
             const SizedBox(height: 30),
-            TextButton(
-                onPressed: onRestart, child: const Text("Back to start!")),
+            OutlinedButton(
+              onPressed: onRestart,
+              child: const Text(
+                "Back to start!",
+                style: TextStyle(color: Colors.white, fontSize: 20),
+              ),
+            ),
           ],
         ),
       ),
