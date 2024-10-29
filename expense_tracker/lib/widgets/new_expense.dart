@@ -3,7 +3,8 @@ import "package:expense_tracker/utils/date_formatter.dart";
 import "package:expense_tracker/models/expense.dart";
 
 class NewExpense extends StatefulWidget {
-  const NewExpense({super.key});
+  const NewExpense({super.key, required this.addList});
+  final Function(Expense e) addList;
   @override
   State<NewExpense> createState() {
     return _NewExpenseState();
@@ -21,6 +22,39 @@ class _NewExpenseState extends State<NewExpense> {
     _textController.dispose();
     _amountController.dispose();
     super.dispose();
+  }
+
+  void _submitExpenseData() {
+    final enteredAmount = double.tryParse(_amountController.text);
+    final amountIsInvalid = enteredAmount == null || enteredAmount <= 0;
+    if (_amountController.text.trim().isEmpty ||
+        amountIsInvalid ||
+        _selectedDate == null) {
+      showDialog(
+        context: context,
+        builder: (ctx) => AlertDialog(
+            title: const Text("Invalid input"),
+            content:
+                const Text("Please make sure to enter valid amount and date"),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(ctx);
+                },
+                child: const Text("OK"),
+              )
+            ]),
+      );
+      return;
+    }
+
+    widget.addList(Expense(
+        title: _textController.text,
+        amount: enteredAmount,
+        date: _selectedDate!,
+        category: _selectedCategory));
+
+    Navigator.pop(context);
   }
 
   void _showDateModal() async {
@@ -107,10 +141,7 @@ class _NewExpenseState extends State<NewExpense> {
                 child: const Text("Cancel"),
               ),
               ElevatedButton(
-                  onPressed: () {
-                    print(_textController.text);
-                  },
-                  child: Text("Add Expense"))
+                  onPressed: _submitExpenseData, child: Text("Add Expense"))
             ],
           )
         ],
