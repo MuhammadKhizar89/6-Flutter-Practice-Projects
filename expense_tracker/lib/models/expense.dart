@@ -29,6 +29,10 @@ class Expense {
 
 class ExpenseBucket {
   const ExpenseBucket({required this.category, required this.expenses});
+  ExpenseBucket.custom(List<Expense> allExpenses, this.category)
+      : expenses =
+            allExpenses.where((test) => test.category == category).toList();
+
   final Category category;
   final List<Expense> expenses;
   double get totalExpenses {
