@@ -21,10 +21,34 @@ class _ExpensesState extends State<Expenses> {
       category: Category.work,
     ),
     Expense(
+      title: "Burger",
+      amount: 20.9,
+      date: DateTime.now(),
+      category: Category.food,
+    ),
+    Expense(
+      title: "Pizza",
+      amount: 10.99,
+      date: DateTime.now(),
+      category: Category.food,
+    ),
+    Expense(
       title: "Cinema",
       amount: 15.99,
       date: DateTime.now(),
       category: Category.leisure,
+    ),
+    Expense(
+      title: "UK",
+      amount: 50.0,
+      date: DateTime.now(),
+      category: Category.travel,
+    ),
+    Expense(
+      title: "USA",
+      amount: 60.0,
+      date: DateTime.now(),
+      category: Category.travel,
     ),
   ];
   void _addExpense(Expense expense) {
