@@ -72,7 +72,6 @@ class _ExpensesState extends State<Expenses> {
     if (_registeredExpenses.isNotEmpty) {
       mainContent = Column(
         children: [
-          const Text("Your Expenses"),
           Expanded(
             child: ExpensesList(
                 expenses: _registeredExpenses, onRemove: _onRemove),
