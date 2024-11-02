@@ -94,16 +94,29 @@ class _ExpensesState extends State<Expenses> {
   @override
   Widget build(BuildContext context) {
     Widget mainContent = const Center(child: Text("No expenses found."));
+    final width = MediaQuery.of(context).size.width;
     if (_registeredExpenses.isNotEmpty) {
-      mainContent = Column(
-        children: [
-          Chart(expenses: _registeredExpenses),
-          Expanded(
-            child: ExpensesList(
-                expenses: _registeredExpenses, onRemove: _onRemove),
-          ),
-        ],
-      );
+      mainContent = width < 600
+          ? Column(
+              children: [
+                Chart(expenses: _registeredExpenses),
+                Expanded(
+                  child: ExpensesList(
+                      expenses: _registeredExpenses, onRemove: _onRemove),
+                ),
+              ],
+            )
+          : Row(
+              children: [
+                Expanded(
+                  child: Chart(expenses: _registeredExpenses),
+                ),
+                Expanded(
+                  child: ExpensesList(
+                      expenses: _registeredExpenses, onRemove: _onRemove),
+                ),
+              ],
+            );
     }
     return Scaffold(
       appBar: AppBar(
