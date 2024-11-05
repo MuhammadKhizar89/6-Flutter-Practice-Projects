@@ -59,6 +59,9 @@ class _ExpensesState extends State<Expenses> {
 
   void _showModal() {
     showModalBottomSheet(
+        useSafeArea: true,
+        isScrollControlled:
+            MediaQuery.of(context).size.width > 600 ? true : false,
         context: context,
         builder: (ctx) {
           return NewExpense(
