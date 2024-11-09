@@ -2,11 +2,13 @@ import "package:flutter/material.dart";
 
 import "package:meals/models/meal.dart";
 import "package:meals/widgets/meal_trait.dart";
+import "package:meals/widgets/trait.dart";
 import "package:transparent_image/transparent_image.dart";
 
 class MealItem extends StatelessWidget {
-  const MealItem({super.key, required this.meal});
+  const MealItem({super.key, required this.meal, required this.selectedMeal});
   final Meal meal;
+  final void Function() selectedMeal;
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -15,7 +17,7 @@ class MealItem extends StatelessWidget {
       clipBehavior: Clip.hardEdge,
       elevation: 2,
       child: InkWell(
-        onTap: () {},
+        onTap: selectedMeal,
         child: Stack(
           children: [
             FadeInImage(
@@ -49,24 +51,7 @@ class MealItem extends StatelessWidget {
                       overflow: TextOverflow.ellipsis,
                     ),
                     const SizedBox(height: 2),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        MealTrait(
-                            icon: Icons.schedule,
-                            label: "${meal.duration} min"),
-                        const SizedBox(width: 12),
-                        MealTrait(
-                            icon: Icons.work,
-                            label: meal.complexity.name[0].toUpperCase() +
-                                meal.complexity.name.substring(1)),
-                        const SizedBox(width: 12),
-                        MealTrait(
-                            icon: Icons.attach_money,
-                            label: meal.affordability.name[0].toUpperCase() +
-                                meal.affordability.name.substring(1)),
-                      ],
-                    )
+                    Trait(meal: meal),
                   ],
                 ),
               ),
