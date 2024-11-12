@@ -27,20 +27,46 @@ class MealItemInfo extends ConsumerWidget {
         title: Text(meal.title),
         actions: [
           IconButton(
-              onPressed: () {
-                final wasAdded = ref
-                    .read(favoriteMealsProvider.notifier)
-                    .toggleMealNavoriteStatus(meal);
-                _showInfoMessage(
-                    context, wasAdded ? "Meal Added" : "Meal Removed");
+            onPressed: () {
+              final wasAdded = ref
+                  .read(favoriteMealsProvider.notifier)
+                  .toggleMealNavoriteStatus(meal);
+              _showInfoMessage(
+                  context, wasAdded ? "Meal Added" : "Meal Removed");
+            },
+            // icon: AnimatedSwitcher(
+            //   duration: const Duration(milliseconds: 300),
+            //   transitionBuilder: (child, animation) {
+            //     return RotationTransition(
+            //       turns: Tween<double>(begin: 0.9, end: 1).animate(animation),
+            //       child: child,
+            //     );
+            //   },
+            //   child: Icon(
+            //     isFavorite ? Icons.star : Icons.star_border,
+            //     key: ValueKey(isFavorite),
+            //   ),
+            // ),
+            // )
+            icon: AnimatedSwitcher(
+              duration: const Duration(milliseconds: 1000),
+              transitionBuilder: (child, animation) {
+                return RotationTransition(
+                    turns: Tween<double>(begin: 0.6, end: 1).animate(animation),
+                    child: child);
               },
-              icon: Icon(isFavorite ? Icons.star : Icons.star_border)),
+              child: Icon(
+                isFavorite ? Icons.star : Icons.star_border,
+                key: ValueKey(isFavorite),
+              ),
+            ),
+          ),
         ],
       ),
       body: SingleChildScrollView(
         child: Column(
           children: [
-            Image.network(meal.imageUrl),
+            Hero(tag: meal.id, child: Image.network(meal.imageUrl)),
             const SizedBox(height: 10),
             Trait(meal: meal),
             const Text(
