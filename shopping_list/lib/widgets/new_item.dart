@@ -1,5 +1,10 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:shopping_list/data/categories.dart';
+import 'package:shopping_list/models/category.dart';
+import 'package:shopping_list/models/grocery_item.dart';
+import "package:http/http.dart" as http;
 
 class NewItem extends StatefulWidget {
   @override
@@ -11,10 +16,39 @@ class NewItem extends StatefulWidget {
 class _NewItemState extends State<NewItem> {
   final formKey = GlobalKey<FormState>();
   String itemName = '';
-  void _submit() {
+  int quantity = 1;
+  var selectedCategory = categories[Categories.vegetables];
+
+  void _submit() async {
     if (formKey.currentState!.validate()) {
       formKey.currentState!.save();
-      print(itemName);
+      final url = Uri.https("flutter-prep-898ea-default-rtdb.firebaseio.com",
+          "shopping-list.json");
+
+      final response = await http.post(
+        url,
+        headers: {'Content-Type': 'application/json'},
+        body: json.encode(
+          {
+            'name': itemName,
+            'quantity': quantity,
+            'category': selectedCategory!.name,
+          },
+        ),
+      );
+      final Map<String, dynamic> d = json.decode(response.body);
+      print(response.body);
+      print(d);
+      if (!context.mounted) {
+        return;
+      }
+
+      Navigator.of(context).pop(GroceryItem(
+        id: d['name'],
+        name: itemName,
+        quantity: quantity,
+        category: selectedCategory!,
+      ));
     }
   }
 
@@ -40,7 +74,7 @@ class _NewItemState extends State<NewItem> {
                       value.isEmpty ||
                       value.trim().length <= 1 ||
                       value.trim().length > 50) {
-                    return "Must be between 1 and 50 charecters";
+                    return "Must be between 1 and 50 characters";
                   }
                   return null;
                 },
@@ -63,53 +97,60 @@ class _NewItemState extends State<NewItem> {
                             value.isEmpty ||
                             int.tryParse(value) == null ||
                             int.tryParse(value)! <= 0) {
-                          return "Must be a valid ,Positive number.";
+                          return "Must be a valid, positive number.";
                         }
                         return null;
                       },
+                      onSaved: (value) {
+                        quantity = int.parse(value!);
+                      },
                     ),
                   ),
-                  const SizedBox(
-                    width: 8,
-                  ),
+                  const SizedBox(width: 8),
                   Expanded(
-                    child: DropdownButtonFormField(
+                    child: DropdownButtonFormField<Category>(
+                      value: selectedCategory,
                       items: [
                         for (final category in categories.entries)
                           DropdownMenuItem(
                             value: category.value,
                             child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
                                 Container(
                                   width: 16,
                                   height: 16,
                                   color: category.value.color,
                                 ),
-                                const SizedBox(
-                                  width: 6,
-                                ),
-                                Text(
-                                  category.value.name,
-                                )
+                                const SizedBox(width: 6),
+                                Text(category.value.name),
                               ],
                             ),
                           ),
                       ],
-                      onChanged: (value) {},
+                      onChanged: (value) {
+                        setState(() {
+                          selectedCategory = value;
+                        });
+                      },
+                      validator: (value) =>
+                          value == null ? "Please select a category" : null,
+                      onSaved: (value) {
+                        selectedCategory = value;
+                      },
                     ),
                   ),
                 ],
               ),
-              const SizedBox(
-                height: 10,
-              ),
+              const SizedBox(height: 10),
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   TextButton(
                     onPressed: () {
                       formKey.currentState!.reset();
+                      setState(() {
+                        selectedCategory = null;
+                      });
                     },
                     child: const Text("Reset"),
                   ),
